@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Game Paper-Rock-Scissors-V2-March2019</title>
+    <link rel="stylesheet" href="sass/style.css">
+</head>
+
+<body>
+    <div class="row container" id="modal-overlay">
+        <div class='round'>
+            <button id="new-game">NEW GAME</button>
+            <div id="r-number"></div>
+            <h2>Table score</h2>
+            <h3>HUMAN - COMPUTER</h3>
+            <div id="score"></div>
+        </div>
+        <div class='play'>
+            <h1>"Paper - Rock - Scissors" Game</h1>
+            <h3>Choose one button</h3>
+            <div>
+                <button id="paper" class="circle-btn player-move" data-move="paper">Paper</button>
+                <button id="rock" class="circle-btn player-move" data-move="rock">Rock</button>
+                <button id="scissors" class="circle-btn player-move" data-move="scissors">Scissors</button>
+            </div>
+            <div id="output"></div>
+        </div>
+    </div>
+    <div class="modal" id="modal-one">
+        <a href="#" class="close">x</a>
+        <div id="g-result">
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
