@@ -8,7 +8,7 @@ var params = {
     score: document.querySelector("#score"),
     humanScore: 0,
     computerScore: 0,
-    game: document.querySelector("#new-game"),
+    game: document.querySelector("#new-game-button"),
     question: 10,
     roundNumber: document.querySelector("#r-number"),
     gameResult: document.querySelector("#g-result"),
@@ -43,10 +43,10 @@ function controllButtons(disable) {
     params.circleButton.forEach(function (currentElement) {
         if (disable) {
             currentElement.setAttribute('disabled', true);
-            currentElement.classList.remove('circle')
+            currentElement.classList.remove('circle');
         } else {
             currentElement.removeAttribute('disabled');
-            currentElement.classList.add('circle')
+            currentElement.classList.add('circle');
         }
     });
 }
@@ -84,7 +84,7 @@ function computerMove() {
     var random = Math.floor(Math.random() * 3);
     var computerChoices = ['paper', 'rock', 'scissors'];
     return computerChoices[random];
-};
+}
 
 //PROCESS OF GAME
 
@@ -96,12 +96,11 @@ function playerMove(name) {
         (name === 'scissors' && computerM === 'rock')) {
         params.computerScore++;
         params.score.innerHTML = params.humanScore + ' - ' + params.computerScore;
-        var computerWon = 'computer won';
         params.progress.push({
             'round-nb': params.eachRound,
             'computer-move': computerM,
             'player-move': name,
-            'result': computerWon,
+            'result': 'computer won',
         });
         params.output.innerHTML = 'COMPUTER WON. You played ' + name + ', computer played ' + computerM;
         endRound();
@@ -110,23 +109,21 @@ function playerMove(name) {
         (name === 'paper' && computerM === 'rock')) {
         params.humanScore++;
         params.score.innerHTML = params.humanScore + ' - ' + params.computerScore;
-        var youWon = 'you won';
         params.progress.push({
             'round-nb': params.eachRound,
             'computer-move': computerM,
             'player-move': name,
-            'result': youWon,
+            'result': 'you won',
         });
         params.output.innerHTML = 'YOU WON. You played ' + name + ', computer played ' + computerM;
         endRound();
     } else {
         params.output.innerHTML = 'DRAW. You played ' + name + ', computer played ' + computerM;
-        var draw = 'draw';
         params.progress.push({
             'round-nb': params.eachRound,
             'computer-move': computerM,
             'player-move': name,
-            'result': draw,
+            'result': 'draw',
         });
     }
 }
@@ -134,25 +131,23 @@ function playerMove(name) {
 //END ROUND
 
 function endRound() {
-    if (params.humanScore == params.winner || params.computerScore == params.winner) {
+    if (params.humanScore === params.winner || params.computerScore === params.winner) {
         paramsWin();
         controllButtons(true);
         showModal();
         createModalTable();
-    } else {
-        return;
     }
 }
 
 function paramsWin() {
-    if (params.humanScore == params.winner) {
+    if (params.humanScore === params.winner) {
         params.gameResult.innerHTML = '<span>GAME OVER  - you won</span>' + '<br>' + '<span>Play Again!</span>';
-    } else if (params.computerScore == params.winner) {
+    } else if (params.computerScore === params.winner) {
         params.gameResult.innerHTML = '<span>GAME OVER - computer won</span>' + '<br>' + '<span>Play Again!</span>';
     }
 }
 
-//SHOW MODAL 
+// SHOW MODAL 
 
 function showModal() {
     var allModals = document.querySelectorAll('.modal');
@@ -164,24 +159,30 @@ function showModal() {
 
 //HIDE MODAL 
 
-var hideModal = function (event) {
+function hideModal(event) {
     if (event) {
         event.preventDefault();
     }
     document.querySelector('#modal-one').classList.remove('show');
-};
-var closeButtons = document.querySelectorAll('.close');
-for (var i = 0; i < closeButtons.length; i++) {
-    closeButtons[i].addEventListener('click', hideModal);
 }
+
+function CloseModal() {
+    var closeButtons = document.querySelectorAll('.close');
+    for (var i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].addEventListener('click', hideModal);
+    }
+}
+
+CloseModal();
+
 
 // MODAL TABLE
 
 function createModalTable() {
-    for (var g = 0; g < params.eachRound; g++) {
-        params.gameResult.innerHTML += ' round number: ' + params.progress[g]['round-nb'] + ',   ';
-        params.gameResult.innerHTML += ' your move: ' + params.progress[g]['player-move'] + ',  ';
-        params.gameResult.innerHTML += ' computer move: ' + params.progress[g]['computer-move'] + ', ';
-        params.gameResult.innerHTML += ' result: ' + params.progress[g]['result'] + '<br>';
+    for (var j = 0; j < params.eachRound; j++) {
+        params.gameResult.innerHTML += ' round number: ' + params.progress[j]['round-nb'] + ',   ';
+        params.gameResult.innerHTML += ' your move: ' + params.progress[j]['player-move'] + ',  ';
+        params.gameResult.innerHTML += ' computer move: ' + params.progress[j]['computer-move'] + ', ';
+        params.gameResult.innerHTML += ' result: ' + params.progress[j]['result'] + '<br>';
     }
 }
