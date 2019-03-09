@@ -1,4 +1,12 @@
 'use strict';
+var human = {
+    score: 0,
+    choice: ''
+};
+var computer = {
+    score: 0,
+    choice: ''
+};
 var params = {
     paper: document.querySelector("#paper"),
     rock: document.querySelector("#rock"),
@@ -6,8 +14,6 @@ var params = {
     output: document.querySelector("#output"),
     random: Math.floor(Math.random() * 3) + 1,
     score: document.querySelector("#score"),
-    humanScore: 0,
-    computerScore: 0,
     game: document.querySelector("#new-game-button"),
     question: 10,
     roundNumber: document.querySelector("#r-number"),
@@ -53,25 +59,29 @@ function controllButtons(disable) {
 
 //NEW GAME
 
-params.game.addEventListener('click', function () {
-    controllButtons(false);
-    resetGame();
-    params.question = window.prompt('How many round would you like to play?');
-    if (isNaN(params.question) || params.question.length < 1) {
-        params.roundNumber.innerHTML = 'Please, write a number';
-    } else {
-        params.winner = Math.floor(params.question * 50 / 100 + 1);
-        params.roundNumber.innerHTML = 'Number of round: ' + params.question + '  -   you will be a winner if you win ' + params.winner + ' rounds';
-    }
-    hideModal();
-});
+NewGame();
 
+function NewGame() {
+    params.game.addEventListener('click', function () {
+        controllButtons(false);
+        resetGame();
+        params.question = window.prompt('How many round would you like to play?');
+        if (isNaN(params.question) || params.question.length < 1) {
+            params.roundNumber.innerHTML = 'Please, write a number';
+        } else {
+            params.winner = Math.floor(params.question * 50 / 100 + 1);
+            params.roundNumber.innerHTML = 'Number of round: ' + params.question + '  -   you will be a winner if you win ' + params.winner + ' rounds';
+        }
+        hideModal();
+        CloseModal();
+    });
+}
 //RESET GAME
 
 function resetGame() {
-    params.humanScore = 0;
-    params.computerScore = 0;
-    params.score.innerHTML = params.humanScore + ' - ' + params.computerScore;
+    human.score = 0;
+    computer.score = 0;
+    params.score.innerHTML = human.score + ' - ' + computer.score;
     params.output.innerHTML = '';
     params.gameResult.innerHTML = '';
     params.eachRound = 0;
@@ -80,58 +90,67 @@ function resetGame() {
     }
 }
 
+function playerMoveButtonsListeners() {
+    params.rock.addEventListener('click', function () {
+        playerMove('rock');
+    });
+
+    params.paper.addEventListener('click', function () {
+        playerMove('paper');
+    });
+
+    params.scissors.addEventListener('click', function () {
+        playerMove('scissors');
+    });
+}
+
 function computerMove() {
-    var random = Math.floor(Math.random() * 3);
     var computerChoices = ['paper', 'rock', 'scissors'];
+    var random = Math.floor(Math.random() * 3);
     return computerChoices[random];
+}
+
+function playerMove(humanChoice) {
+    human.choice = humanChoice;
+    computer.choice = computerMove();
+    whoWins();
+    addProgress();
+    endRound();
 }
 
 //PROCESS OF GAME
 
-function playerMove(name) {
-    var computerM = computerMove();
-    params.eachRound++;
-    if ((name === 'rock' && computerM === 'paper') ||
-        (name === 'paper' && computerM === 'scissors') ||
-        (name === 'scissors' && computerM === 'rock')) {
-        params.computerScore++;
-        params.score.innerHTML = params.humanScore + ' - ' + params.computerScore;
-        params.progress.push({
-            'round-nb': params.eachRound,
-            'computer-move': computerM,
-            'player-move': name,
-            'result': 'computer won',
-        });
-        params.output.innerHTML = 'COMPUTER WON. You played ' + name + ', computer played ' + computerM;
-        endRound();
-    } else if ((name === 'rock' && computerM === 'scissors') ||
-        (name === 'scissors' && computerM === 'paper') ||
-        (name === 'paper' && computerM === 'rock')) {
-        params.humanScore++;
-        params.score.innerHTML = params.humanScore + ' - ' + params.computerScore;
-        params.progress.push({
-            'round-nb': params.eachRound,
-            'computer-move': computerM,
-            'player-move': name,
-            'result': 'you won',
-        });
-        params.output.innerHTML = 'YOU WON. You played ' + name + ', computer played ' + computerM;
-        endRound();
+function whoWins() {
+    if ((human.choice === 'rock' && computer.choice === 'paper') ||
+        (human.choice === 'paper' && computer.choice === 'scissors') ||
+        (human.choice === 'scissors' && computer.choice === 'rock')) {
+        computer.score++;
+        params.score.innerHTML = human.score + ' - ' + computer.score;
+        params.output.innerHTML = 'COMPUTER WON. You played ' + human.choice + ', computer played ' + computer.choice;
+    } else if ((human.choice === 'rock' && computer.choice === 'scissors') ||
+        (human.choice === 'scissors' && computer.choice === 'paper') ||
+        (human.choice === 'paper' && computer.choice === 'rock')) {
+        human.score++;
+        params.score.innerHTML = human.score + ' - ' + computer.score;
+        params.output.innerHTML = 'YOU WON. You played ' + human.choice + ', computer played ' + computer.choice;
     } else {
-        params.output.innerHTML = 'DRAW. You played ' + name + ', computer played ' + computerM;
-        params.progress.push({
-            'round-nb': params.eachRound,
-            'computer-move': computerM,
-            'player-move': name,
-            'result': 'draw',
-        });
+        params.output.innerHTML = 'DRAW. You played ' + human.choice + ', computer played ' + computer.choice;
     }
+}
+
+function addProgress() {
+    params.progress.push({
+        'round-nb': params.eachRound,
+        'computer-move': computer.choice,
+        'player-move': human.choice,
+        // 'result': 'draw'
+    });
 }
 
 //END ROUND
 
 function endRound() {
-    if (params.humanScore === params.winner || params.computerScore === params.winner) {
+    if (human.score === params.winner || computer.score === params.winner) {
         paramsWin();
         controllButtons(true);
         showModal();
@@ -140,9 +159,9 @@ function endRound() {
 }
 
 function paramsWin() {
-    if (params.humanScore === params.winner) {
+    if (human.score === params.winner) {
         params.gameResult.innerHTML = '<span>GAME OVER  - you won</span>' + '<br>' + '<span>Play Again!</span>';
-    } else if (params.computerScore === params.winner) {
+    } else if (computer.score === params.winner) {
         params.gameResult.innerHTML = '<span>GAME OVER - computer won</span>' + '<br>' + '<span>Play Again!</span>';
     }
 }
@@ -173,16 +192,13 @@ function CloseModal() {
     }
 }
 
-CloseModal();
-
-
 // MODAL TABLE
 
 function createModalTable() {
     for (var j = 0; j < params.eachRound; j++) {
         params.gameResult.innerHTML += ' round number: ' + params.progress[j]['round-nb'] + ',   ';
         params.gameResult.innerHTML += ' your move: ' + params.progress[j]['player-move'] + ',  ';
-        params.gameResult.innerHTML += ' computer move: ' + params.progress[j]['computer-move'] + ', ';
-        params.gameResult.innerHTML += ' result: ' + params.progress[j]['result'] + '<br>';
+        params.gameResult.innerHTML += ' computer move: ' + params.progress[j]['computer-move'] + '<br>';
+        // params.gameResult.innerHTML += ' result: ' + params.progress[j]['result'] + '<br>';
     }
 }
