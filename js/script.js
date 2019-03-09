@@ -111,6 +111,7 @@ function computerMove() {
 }
 
 function playerMove(humanChoice) {
+    params.eachRound++;
     human.choice = humanChoice;
     computer.choice = computerMove();
     whoWins();
