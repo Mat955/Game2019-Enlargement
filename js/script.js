@@ -31,6 +31,7 @@ initialize();
 function initialize() {
     registListener();
     controllButtons(true);
+    hideModalTable();
 }
 
 function registListener() {
@@ -72,7 +73,6 @@ function newGame() {
             params.winner = Math.floor(params.question * 50 / 100 + 1);
             params.roundNumber.innerHTML = 'Number of round: ' + params.question + '  -   you will be a winner if you win ' + params.winner + ' rounds';
         }
-        hideModal();
         closeModal();
     });
 }
@@ -168,17 +168,17 @@ function showModal() {
 
 /* HIDE MODAL */
 
-function hideModal(event) {
+function closeModal(event) {
     if (event) {
         event.preventDefault();
     }
     document.querySelector('#modal-one').classList.remove('show');
 }
 
-function closeModal() {
+function hideModalTable() {
     var closeButtons = document.querySelectorAll('.close');
     for (var i = 0; i < closeButtons.length; i++) {
-        closeButtons[i].addEventListener('click', hideModal);
+        closeButtons[i].addEventListener('click', closeModal);
     }
 }
 
