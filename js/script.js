@@ -59,9 +59,9 @@ function controllButtons(disable) {
 
 //NEW GAME
 
-NewGame();
+newGame();
 
-function NewGame() {
+function newGame() {
     params.game.addEventListener('click', function () {
         controllButtons(false);
         resetGame();
@@ -73,7 +73,7 @@ function NewGame() {
             params.roundNumber.innerHTML = 'Number of round: ' + params.question + '  -   you will be a winner if you win ' + params.winner + ' rounds';
         }
         hideModal();
-        CloseModal();
+        closeModal();
     });
 }
 //RESET GAME
@@ -90,20 +90,6 @@ function resetGame() {
     }
 }
 
-function playerMoveButtonsListeners() {
-    params.rock.addEventListener('click', function () {
-        playerMove('rock');
-    });
-
-    params.paper.addEventListener('click', function () {
-        playerMove('paper');
-    });
-
-    params.scissors.addEventListener('click', function () {
-        playerMove('scissors');
-    });
-}
-
 function computerMove() {
     var computerChoices = ['paper', 'rock', 'scissors'];
     var random = Math.floor(Math.random() * 3);
@@ -115,9 +101,9 @@ function playerMove(humanChoice) {
     human.choice = humanChoice;
     computer.choice = computerMove();
     whoWins();
-    addProgress();
     endRound();
 }
+
 
 //PROCESS OF GAME
 
@@ -127,24 +113,27 @@ function whoWins() {
         (human.choice === 'scissors' && computer.choice === 'rock')) {
         computer.score++;
         params.score.innerHTML = human.score + ' - ' + computer.score;
+        addProgress('computer won');
         params.output.innerHTML = 'COMPUTER WON. You played ' + human.choice + ', computer played ' + computer.choice;
     } else if ((human.choice === 'rock' && computer.choice === 'scissors') ||
         (human.choice === 'scissors' && computer.choice === 'paper') ||
         (human.choice === 'paper' && computer.choice === 'rock')) {
         human.score++;
         params.score.innerHTML = human.score + ' - ' + computer.score;
+        addProgress('you won');
         params.output.innerHTML = 'YOU WON. You played ' + human.choice + ', computer played ' + computer.choice;
     } else {
         params.output.innerHTML = 'DRAW. You played ' + human.choice + ', computer played ' + computer.choice;
+        addProgress('draw');
     }
 }
 
-function addProgress() {
+function addProgress(result) {
     params.progress.push({
         'round-nb': params.eachRound,
         'computer-move': computer.choice,
         'player-move': human.choice,
-        // 'result': 'draw'
+        'result': result
     });
 }
 
@@ -167,7 +156,7 @@ function paramsWin() {
     }
 }
 
-// SHOW MODAL 
+/* SHOW MODAL */
 
 function showModal() {
     var allModals = document.querySelectorAll('.modal');
@@ -177,7 +166,7 @@ function showModal() {
     document.querySelector('#modal-one').classList.add('show');
 }
 
-//HIDE MODAL 
+/* HIDE MODAL */
 
 function hideModal(event) {
     if (event) {
@@ -186,7 +175,7 @@ function hideModal(event) {
     document.querySelector('#modal-one').classList.remove('show');
 }
 
-function CloseModal() {
+function closeModal() {
     var closeButtons = document.querySelectorAll('.close');
     for (var i = 0; i < closeButtons.length; i++) {
         closeButtons[i].addEventListener('click', hideModal);
@@ -196,10 +185,10 @@ function CloseModal() {
 // MODAL TABLE
 
 function createModalTable() {
-    for (var j = 0; j < params.eachRound; j++) {
+    for (var j = 0; j < params.progress.length; j++) {
         params.gameResult.innerHTML += ' round number: ' + params.progress[j]['round-nb'] + ',   ';
         params.gameResult.innerHTML += ' your move: ' + params.progress[j]['player-move'] + ',  ';
-        params.gameResult.innerHTML += ' computer move: ' + params.progress[j]['computer-move'] + '<br>';
-        // params.gameResult.innerHTML += ' result: ' + params.progress[j]['result'] + '<br>';
+        params.gameResult.innerHTML += ' computer move: ' + params.progress[j]['computer-move'] + ',  ';
+        params.gameResult.innerHTML += ' result: ' + params.progress[j]['result'] + '<br>';
     }
 }
