@@ -41,9 +41,9 @@ function registListener() {
             playerMove(buttonName);
         });
     }
-    var closeButtons = document.querySelectorAll('.close');
-    for (var i = 0; i < closeButtons.length; i++) {
-        closeButtons[i].addEventListener('click', closeModal);
+    var modalClosingButtons = document.querySelectorAll('.close');
+    for (var i = 0; i < modalClosingButtons.length; i++) {
+        modalClosingButtons[i].addEventListener('click', closeModal);
     }
 }
 
