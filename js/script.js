@@ -31,18 +31,19 @@ initialize();
 function initialize() {
     registListener();
     controllButtons(true);
-    hideModalTable();
 }
 
 function registListener() {
     var buttonList = document.querySelectorAll('.player-move');
-
     for (let i = 0; i < buttonList.length; i++) {
         const buttonName = buttonList[i].getAttribute('data-move');
-
         buttonList[i].addEventListener('click', function () {
             playerMove(buttonName);
         });
+    }
+    var closeButtons = document.querySelectorAll('.close');
+    for (var i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].addEventListener('click', closeModal);
     }
 }
 
@@ -166,20 +167,13 @@ function showModal() {
     document.querySelector('#modal-one').classList.add('show');
 }
 
-/* HIDE MODAL */
+/* CLOSE MODAL */
 
 function closeModal(event) {
     if (event) {
         event.preventDefault();
     }
     document.querySelector('#modal-one').classList.remove('show');
-}
-
-function hideModalTable() {
-    var closeButtons = document.querySelectorAll('.close');
-    for (var i = 0; i < closeButtons.length; i++) {
-        closeButtons[i].addEventListener('click', closeModal);
-    }
 }
 
 // MODAL TABLE
